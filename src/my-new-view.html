@@ -6,6 +6,8 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+
 
 <dom-module id="my-new-view">
   <!-- Defines the element's style and local DOM -->
@@ -44,49 +46,98 @@
 
     <h1>Add Contact Information</h1>
 
+<!--Contact Name and Position Form-->
     <paper-material elevation="1">
-
     <h2>Add basic details</h2>
-
-<!-- http://localhost:3000 testing: http://httpbin.org/post -->
      <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/contact_handler.php/" id="contactForm" content-type="application/json">
 
        <paper-input maxlength=25 name="c_firstName" label="First name" style="width: 150px" required auto-validate></paper-input>
        <paper-input maxlength=25 name="c_lastName" label="Last name" style="width: 150px"></paper-input>
        <paper-input maxlength=255 name="c_Position" label="Position" style="width: 300px"></paper-input>
-       <paper-button class="green" raised onclick="submitForm()"><iron-icon icon="save"></iron-icon>Submit</paper-button>
+       <paper-button class="green" raised onclick="_submit2(event)"><iron-icon icon="save"></iron-icon>Submit</paper-button>
        <paper-button class="red" raised onclick="_reset(event)"><iron-icon icon="delete"></iron-icon>Cancel</paper-button>
        <div class="output"></div>
 
      </form>
-    </paper-material>
+   </paper-material>
 
-    <paper-material elevation="1">
-
-    <h2>Add Phone Number</h2>
-
-<!-- http://localhost:3000 testing: http://httpbin.org/post -->
+<!--Phone Number Form-->
+   <paper-material elevation="1">
+   <h2>Add Phone Number</h2>
      <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/phone_handler.php/" id="phoneForm" content-type="application/json">
 
        <paper-input maxlength=3 name="p_contactID" label="Contact ID"
            style="width: 80px"
            prevent-invalid-input allowed-pattern="[0-9]"
-           required auto-validate></paper-input>
+           required auto-validate>
+       </paper-input>
+
        <paper-input name="p_phoneNumber" label="Phone number"
-       style="width: 150px"
-       maxlength=13 minlength=7
-       prevent-invalid-input allowed-pattern="[0-9, ' ']"
-       required auto-validate></paper-input>
+         style="width: 300px"
+         maxlength=13 minlength=7
+         prevent-invalid-input allowed-pattern="[0-9, ' ']"
+         required auto-validate>
+           <iron-icon icon="communication:phone" prefix></iron-icon>
+       </paper-input>
 
        <paper-toggle-button id='mobileFlag' value='Yes' name="p_mobileFlag" checked>Mobile Number?</paper-toggle-button>
 
-       <paper-button class="green" raised onclick="submitForm()"><iron-icon icon="save"></iron-icon>Submit</paper-button>
+       <paper-button class="green" raised onclick="_submit(event)"><iron-icon icon="save"></iron-icon>Submit</paper-button>
        <paper-button class="red" raised onclick="_reset(event)"><iron-icon icon="delete"></iron-icon>Cancel</paper-button>
        <div class="output"></div>
 
      </form>
     </paper-material>
 
+<!--Email Address Form-->
+    <paper-material elevation="1">
+    <h2>Add Email Address</h2>
+      <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/email_handler.php/" id="emailForm" content-type="application/json">
+
+      <paper-input maxlength=3 name="e_contactID" label="Contact ID"
+          style="width: 80px"
+          prevent-invalid-input allowed-pattern="[0-9]"
+          required auto-validate></paper-input>
+
+      <paper-input type="email" name="e_email" label="Email" style="width: 300px"
+          required auto-validate error-message="Please enter a valid email">
+          <iron-icon icon="communication:email" prefix></iron-icon>
+      </paper-input>
+
+      <paper-button class="green" raised onclick="_submit(event)"><iron-icon icon="save"></iron-icon>Submit</paper-button>
+      <paper-button class="red" raised onclick="_reset(event)"><iron-icon icon="delete"></iron-icon>Cancel</paper-button>
+      <div class="output"></div>
+
+    </form>
+    </paper-material>
+
+<!--Practice Name Form-->
+    <paper-material elevation="1">
+    <h2>Add Practice</h2>
+     <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/email_handler.php/" id="practiceForm" content-type="application/json">
+
+      <paper-input maxlength=3 name="pr_contactID" label="Contact ID"
+          style="width: 80px"
+          prevent-invalid-input allowed-pattern="[0-9]"
+          required auto-validate>
+      </paper-input>
+
+      <paper-input name="pr_name" label="Practice name" style="width: 300px"
+          required auto-validate>
+          <iron-icon icon="communication:business" prefix></iron-icon>
+      </paper-input>
+
+      <paper-input maxlength=1 name="pr_cohort" label="Cohort"
+          style="width: 80px"
+          prevent-invalid-input allowed-pattern="[0-9]"
+          required auto-validate></paper-input>
+
+      <paper-button class="green" raised onclick="_submit(event)"><iron-icon icon="save"></iron-icon>Submit</paper-button>
+      <paper-button class="red" raised onclick="_reset(event)"><iron-icon icon="delete"></iron-icon>Cancel</paper-button>
+      <div class="output"></div>
+
+     </form>
+    </paper-material>
 
   </template>
   <!-- Creates the element's prototype and registers it -->
@@ -95,20 +146,23 @@
       is: 'my-new-view'
     });
 
+    function _submit(event) {
+      Polymer.dom(event).localTarget.parentElement.submit();
+      Polymer.dom(event).localTarget.parentElement.reset();
+    }
+
+    function _submit2(event) {
+      var form = document.querySelector('#contactForm');
+      if (form) {
+        form.submit();
+        form.reset();
+      }
+    }
+
     function _reset(event) {
        var form = Polymer.dom(event).localTarget.parentElement
        form.reset();
-    //   form.querySelector('.output').innerHTML = '';
-     }
-
-    function submitForm() {
-      document.getElementById('contactForm').submit();
-      document.getElementById('contactForm').reset();
-     }
-
-    function submitForm() {
-      document.getElementById('phoneForm').submit();
-      document.getElementById('phoneForm').reset();
+       form.querySelector('.output').innerHTML = '';
      }
 
   </script>
