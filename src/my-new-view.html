@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
 
 <dom-module id="my-new-view">
@@ -64,7 +65,7 @@
 <!--Phone Number Form-->
    <paper-material elevation="1">
    <h2>Add Phone Number</h2>
-     <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/phone_handler.php/" id="phoneForm" content-type="application/json">
+     <form is="iron-form"  method="post" action="http://127.0.0.1/polymersupport/phone_handler.php/" id="phoneForm" content-type="application/json">
 
        <paper-input maxlength=3 name="p_contactID" label="Contact ID"
            style="width: 80px"
@@ -114,13 +115,7 @@
 <!--Practice Name Form-->
     <paper-material elevation="1">
     <h2>Add Practice</h2>
-     <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/email_handler.php/" id="practiceForm" content-type="application/json">
-
-      <paper-input maxlength=3 name="pr_contactID" label="Contact ID"
-          style="width: 80px"
-          prevent-invalid-input allowed-pattern="[0-9]"
-          required auto-validate>
-      </paper-input>
+     <form is="iron-form" method="post" action="http://127.0.0.1/polymersupport/practice_handler.php/" id="practiceForm" content-type="application/json">
 
       <paper-input name="pr_name" label="Practice name" style="width: 300px"
           required auto-validate>
@@ -138,16 +133,39 @@
 
      </form>
     </paper-material>
-
+<!--Submit result modal
+    <paper-dialog id="modal" modal>
+      <p>{{databind response}}</p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>Close</paper-button>
+      </div>
+    </paper-dialog>
+-->
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'my-new-view'
-    });
+      is: 'my-new-view',
 
+    });
+/*
+on-iron-form-response="_response" on-iron-form-error="_error"
+    _response: function( e ){
+      console.log("Response received, OK!")
+      console.log( e.detail );
+    },
+    _error: function( e ){
+      console.log("Response received, ERROR!")
+      console.log( e );
+      debugger;
+    }
+*/
     function _submit(event) {
       Polymer.dom(event).localTarget.parentElement.submit();
+      //bind response into variable
+      //trigger submit result modal
+
+      //move reset to occur only on success
       Polymer.dom(event).localTarget.parentElement.reset();
     }
 
